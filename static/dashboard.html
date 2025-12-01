@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Calculation API</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-card">
+            <div class="dashboard-header">
+                <h1>Dashboard</h1>
+                <button id="logout-btn" class="btn btn-secondary">Logout</button>
+            </div>
+
+            <div id="message-container" class="message-container" style="display: none;">
+                <p id="message-text"></p>
+            </div>
+
+            <div class="user-info-section">
+                <h2>User Information</h2>
+                <div id="user-info" class="user-info">
+                    <p><strong>Loading user information...</strong></p>
+                </div>
+            </div>
+
+            <div class="calculations-section">
+                <h2>Your Calculations</h2>
+                <p class="info-text">Calculation management features will be available in Module 14.</p>
+                <p class="info-text">You are successfully authenticated and can access protected resources.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initDashboardPage();
+        });
+    </script>
+</body>
+</html>
