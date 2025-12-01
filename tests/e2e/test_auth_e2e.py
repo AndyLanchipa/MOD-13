@@ -187,7 +187,7 @@ class TestRegistrationNegative:
 
         username_error = page.locator("#username-error")
         expect(username_error).to_be_visible()
-        expect(username_error).to_contain_text("alphanumeric")
+        expect(username_error).to_contain_text("letters, numbers")
 
     def test_registration_with_duplicate_username(self, page: Page, unique_user_data):
         """Test registration fails when username already exists."""
