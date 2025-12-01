@@ -2,7 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from app.database import Base, engine
+from app.models import calculation_model, user_model
 from app.routers import calculation_routes, user_routes
+
+# Create tables if they don't exist (for Docker/local dev)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Calculation API",
