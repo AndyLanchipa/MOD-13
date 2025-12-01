@@ -13,7 +13,9 @@ from playwright.sync_api import Page, expect
 class TestRegistrationPositive:
     """Positive test cases for user registration."""
 
-    def test_successful_registration_with_valid_data(self, page: Page, unique_user_data):
+    def test_successful_registration_with_valid_data(
+        self, page: Page, unique_user_data
+    ):
         """Test successful registration with valid user data."""
         page.goto("http://localhost:8000/static/register.html")
 
@@ -127,9 +129,7 @@ class TestRegistrationNegative:
         expect(password_error).to_be_visible()
         expect(password_error).to_contain_text("digit")
 
-    def test_registration_with_mismatched_passwords(
-        self, page: Page, unique_user_data
-    ):
+    def test_registration_with_mismatched_passwords(self, page: Page, unique_user_data):
         """Test registration fails when passwords do not match."""
         page.goto("http://localhost:8000/static/register.html")
 
@@ -144,9 +144,7 @@ class TestRegistrationNegative:
         expect(confirm_error).to_be_visible()
         expect(confirm_error).to_contain_text("do not match")
 
-    def test_registration_with_invalid_email_format(
-        self, page: Page, unique_user_data
-    ):
+    def test_registration_with_invalid_email_format(self, page: Page, unique_user_data):
         """Test registration fails with invalid email format."""
         page.goto("http://localhost:8000/static/register.html")
 
@@ -368,8 +366,13 @@ class TestAuthenticationFlow:
 
         page.wait_for_url("http://localhost:8000/static/login.html", timeout=3000)
 
-    def test_login_page_redirects_authenticated_user(self, page: Page, unique_user_data):
-        """Test that accessing login page when already logged in redirects to dashboard."""
+    def test_login_page_redirects_authenticated_user(
+        self, page: Page, unique_user_data
+    ):
+        """
+        Test that accessing login page when already logged in
+        redirects to dashboard.
+        """
         page.goto("http://localhost:8000/static/register.html")
         page.fill("#username", unique_user_data["username"])
         page.fill("#email", unique_user_data["email"])

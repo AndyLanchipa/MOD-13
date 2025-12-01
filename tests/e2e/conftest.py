@@ -1,12 +1,10 @@
 import multiprocessing
 import time
-from contextlib import contextmanager
 
 import pytest
 import uvicorn
-from playwright.sync_api import Browser, BrowserContext, Page, Playwright
+from playwright.sync_api import BrowserContext
 from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
 
 from app.config import settings
 from app.database import Base
