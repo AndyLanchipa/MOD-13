@@ -32,7 +32,7 @@ def clean_db(test_db_engine):
             )
         )
         existing_tables = [row[0] for row in result]
-        
+
         if "calculations" in existing_tables:
             conn.execute(text("TRUNCATE TABLE calculations RESTART IDENTITY CASCADE"))
         if "users" in existing_tables:
@@ -47,7 +47,7 @@ def clean_db(test_db_engine):
             )
         )
         existing_tables = [row[0] for row in result]
-        
+
         if "calculations" in existing_tables:
             conn.execute(text("TRUNCATE TABLE calculations RESTART IDENTITY CASCADE"))
         if "users" in existing_tables:
