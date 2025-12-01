@@ -24,13 +24,34 @@ def test_db_engine():
 def clean_db(test_db_engine):
     """Clean the database before each test."""
     with test_db_engine.connect() as conn:
-        conn.execute(text("TRUNCATE TABLE calculations RESTART IDENTITY CASCADE"))
-        conn.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE"))
+        # Check if tables exist before truncating
+        result = conn.execute(
+            text(
+                "SELECT table_name FROM information_schema.tables "
+                "WHERE table_schema = 'public'"
+            )
+        )
+        existing_tables = [row[0] for row in result]
+        
+        if "calculations" in existing_tables:
+            conn.execute(text("TRUNCATE TABLE calculations RESTART IDENTITY CASCADE"))
+        if "users" in existing_tables:
+            conn.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE"))
         conn.commit()
     yield
     with test_db_engine.connect() as conn:
-        conn.execute(text("TRUNCATE TABLE calculations RESTART IDENTITY CASCADE"))
-        conn.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE"))
+        result = conn.execute(
+            text(
+                "SELECT table_name FROM information_schema.tables "
+                "WHERE table_schema = 'public'"
+            )
+        )
+        existing_tables = [row[0] for row in result]
+        
+        if "calculations" in existing_tables:
+            conn.execute(text("TRUNCATE TABLE calculations RESTART IDENTITY CASCADE"))
+        if "users" in existing_tables:
+            conn.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE"))
         conn.commit()
 
 
