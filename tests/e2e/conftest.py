@@ -9,11 +9,15 @@ from sqlalchemy import create_engine, text
 from app.config import settings
 from app.database import Base
 
+# Import models to register them with Base.metadata
+from app.models import Calculation, User  # noqa: F401
+
 
 @pytest.fixture(scope="session")
 def test_db_engine():
     """Create a test database engine for E2E tests."""
     engine = create_engine(settings.test_database_url)
+    # Ensure all models are imported before creating tables
     Base.metadata.create_all(bind=engine)
     yield engine
     Base.metadata.drop_all(bind=engine)
