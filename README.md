@@ -2,6 +2,78 @@
 
 A robust FastAPI application for mathematical calculations with user management, built with SQLAlchemy and comprehensive testing.
 
+## Module 13 Features
+
+This module implements complete JWT-based authentication with front-end interface and end-to-end testing:
+
+### JWT Authentication System
+- ✅ **User Registration**: POST `/api/users/register` with Pydantic validation
+- ✅ **User Login**: POST `/api/users/login` with OAuth2 password flow
+- ✅ **JWT Token Generation**: HS256 algorithm with 30-minute expiration
+- ✅ **Password Security**: Bcrypt hashing with proper salt rounds
+- ✅ **Protected Endpoints**: All calculation routes require valid JWT tokens
+- ✅ **Current User Retrieval**: GET `/api/users/me` with token validation
+
+### Front-End Interface
+- ✅ **Registration Page**: `/static/register.html`
+  - Username validation (3-50 chars, alphanumeric + underscore)
+  - Email validation with proper format checking
+  - Password requirements (8+ chars, uppercase, lowercase, digit)
+  - Confirm password matching
+  - Real-time client-side validation with visual feedback
+  - Error message display for server-side validation failures
+  
+- ✅ **Login Page**: `/static/login.html`
+  - Username/email and password fields
+  - Client-side validation
+  - JWT token storage in localStorage
+  - Success/error message handling
+  - Automatic redirect to dashboard on success
+  
+- ✅ **Dashboard Page**: `/static/dashboard.html`
+  - Protected route with authentication check
+  - Display current user information
+  - Logout functionality
+  - Token expiration handling
+  - Automatic redirect to login if unauthenticated
+
+### Playwright End-to-End Tests
+- ✅ **Positive Test Cases**:
+  - Successful registration with valid data
+  - Form validation feedback with success styling
+  - Successful login with correct credentials
+  - JWT token storage verification
+  - Dashboard user information display
+  - Complete authentication flow from registration to dashboard
+  - Logout functionality
+  - Authentication redirect flows
+  
+- ✅ **Negative Test Cases**:
+  - Short password validation (< 8 characters)
+  - Password missing uppercase letter
+  - Password missing lowercase letter
+  - Password missing digit
+  - Mismatched password confirmation
+  - Invalid email format
+  - Short username (< 3 characters)
+  - Invalid username characters
+  - Duplicate username registration
+  - Wrong password on login
+  - Nonexistent username login
+  - Empty form field validation
+  - Unauthenticated access protection
+
+### CI/CD Pipeline Integration
+- ✅ **GitHub Actions Workflow**:
+  - PostgreSQL service container for integration tests
+  - Automated linting (flake8, black, isort)
+  - Unit and integration test execution
+  - Playwright browser installation (Chromium)
+  - E2E test execution in headless mode
+  - Test result artifact uploads
+  - Docker image build and push to Docker Hub
+  - Security scanning (Bandit, Safety)
+
 ## Features
 
 - **Mathematical Operations**: Support for addition, subtraction, multiplication, and division
@@ -56,6 +128,36 @@ A robust FastAPI application for mathematical calculations with user management,
    ```
 
 The API will be available at `http://localhost:8000`
+
+### Front-End Access
+
+Once the application is running, you can access the web interface:
+
+- **Registration Page**: `http://localhost:8000/static/register.html`
+- **Login Page**: `http://localhost:8000/static/login.html`
+- **Dashboard**: `http://localhost:8000/static/dashboard.html` (requires authentication)
+- **API Documentation**: `http://localhost:8000/docs`
+
+### Front-End Features
+
+The application includes a complete authentication interface:
+
+- **User Registration**: 
+  - Client-side validation for username, email, and password
+  - Real-time feedback for input errors
+  - Password requirements: 8+ characters, uppercase, lowercase, and digit
+  - Username validation: 3-50 characters, alphanumeric and underscore only
+  
+- **User Login**:
+  - Secure JWT token-based authentication
+  - Token storage in browser localStorage
+  - Automatic redirect to dashboard on success
+  
+- **Dashboard**:
+  - Display user information
+  - Logout functionality
+  - Protected route that requires authentication
+  - Token expiration handling with automatic redirect
 
 ### Docker Deployment
 
@@ -245,15 +347,72 @@ The project includes comprehensive test coverage across all layers:
 - **Unit Tests**: Factory pattern, schemas, authentication, and user services (31 tests)
 - **Integration Tests**: Database operations and API endpoints (50+ tests)
 - **Route Tests**: User registration/login and calculation CRUD (40+ tests)
+- **E2E Tests**: Playwright end-to-end authentication flow tests (20+ tests)
 - **Coverage**: 80%+ code coverage with detailed reporting
 
 ### Run All Tests
 ```bash
-# Run all tests with coverage
-pytest tests/ -v --cov=app --cov-report=html --cov-report=term-missing
+# Run all tests with coverage (excluding E2E)
+pytest tests/ -v --cov=app --cov-report=html --cov-report=term-missing -m "not e2e"
 
 # Expected output: 80+ tests passing
 ```
+
+### Run Playwright E2E Tests
+
+**Prerequisites**: Install Playwright browsers first:
+```bash
+# Install Playwright and browsers
+pip install playwright pytest-playwright
+playwright install chromium
+
+# Ensure the FastAPI server is running
+uvicorn main:app --reload  # In a separate terminal
+```
+
+**Run E2E Tests**:
+```bash
+# Run all E2E tests
+pytest tests/e2e/ -v -m e2e
+
+# Run with headed browser to see the tests
+pytest tests/e2e/ -v -m e2e --headed
+
+# Run specific E2E test class
+pytest tests/e2e/test_auth_e2e.py::TestRegistrationPositive -v
+pytest tests/e2e/test_auth_e2e.py::TestLoginPositive -v
+pytest tests/e2e/test_auth_e2e.py::TestRegistrationNegative -v
+pytest tests/e2e/test_auth_e2e.py::TestLoginNegative -v
+
+# Generate HTML report
+pytest tests/e2e/ -v -m e2e --html=e2e-report.html --self-contained-html
+```
+
+**E2E Test Coverage**:
+
+**Positive Scenarios**:
+- ✅ Successful registration with valid credentials
+- ✅ Form validation feedback with success styling
+- ✅ Successful login after registration
+- ✅ JWT token storage in localStorage
+- ✅ Dashboard displays user information
+- ✅ Logout functionality clears token
+- ✅ Authentication redirect flows
+
+**Negative Scenarios**:
+- ✅ Registration with short password (< 8 characters)
+- ✅ Password missing uppercase letter
+- ✅ Password missing lowercase letter
+- ✅ Password missing digit
+- ✅ Mismatched password confirmation
+- ✅ Invalid email format
+- ✅ Short username (< 3 characters)
+- ✅ Invalid username characters
+- ✅ Duplicate username registration
+- ✅ Login with wrong password
+- ✅ Login with nonexistent username
+- ✅ Login with empty fields
+- ✅ Unauthenticated dashboard access redirects to login
 
 ### Run Specific Test Categories
 ```bash
@@ -276,12 +435,7 @@ pytest tests/test_auth_service.py -v
 pytest tests/test_calculation_integration.py -v
 
 # Quick test run without coverage
-pytest tests/ -v
-```
-pytest tests/test_calculation_integration.py -v
-
-# Quick test run without coverage
-pytest tests/ -v
+pytest tests/ -v -m "not e2e"
 ```
 
 ### Test Database Setup
@@ -297,33 +451,61 @@ pytest tests/test_calculation_integration.py -v
 All tests run automatically on every push via GitHub Actions:
 - Linting with flake8, black, and isort
 - All unit and integration tests (80+ tests)
+- Playwright E2E tests in headless mode
 - User and calculation route tests
 - Code coverage reporting (minimum 80%)
 - Docker image build and push to Docker Hub
+
+### E2E Test Architecture
+
+The E2E testing infrastructure uses Playwright with the following setup:
+
+**Test Server Management**:
+- Automatic FastAPI server startup in separate process
+- Clean database state for each test using fixtures
+- Proper teardown and cleanup after tests
+
+**Browser Context**:
+- Tests run in Chromium (configurable in pytest.ini)
+- 1280x720 viewport for consistency
+- Can run headed or headless mode
+
+**Test Isolation**:
+- Each test gets unique user credentials to avoid conflicts
+- Database is truncated before and after each test
+- Fresh browser page for each test case
 
 ## Screenshots
 
 ### GitHub Actions Workflow
 ![GitHub Actions Success](docs/screenshots/github-actions-success.png)
-*Successful CI/CD pipeline run with all tests passing*
+*Successful CI/CD pipeline run with all tests passing including Playwright E2E tests*
+
+### Playwright E2E Tests
+![Playwright Tests](docs/screenshots/playwright-tests.png)
+*End-to-end authentication flow tests passing*
+
+### Front-End Login Page
+![Login Page](docs/screenshots/login-page.png)
+*User login interface with client-side validation*
+
+### Front-End Registration Page
+![Registration Page](docs/screenshots/registration-page.png)
+*User registration form with comprehensive validation*
+
+### Front-End Dashboard
+![Dashboard](docs/screenshots/dashboard-page.png)
+*Authenticated user dashboard displaying user information*
 
 ### API Documentation
 ![OpenAPI Docs](docs/screenshots/openapi-docs.png)
 *Interactive API documentation at /docs*
 
-### User Registration
-![User Registration](docs/screenshots/user-registration.png)
-*User registration endpoint in action*
-
-### Calculation Operations
-![Calculation CRUD](docs/screenshots/calculation-crud.png)
-*Calculation CRUD operations with authentication*
-
 ### Docker Hub
 ![Docker Hub](docs/screenshots/docker-hub.png)
 *Docker images deployed to Docker Hub*
 
-*Note: Screenshots can be added to `docs/screenshots/` directory and will be displayed in the README.*
+*Note: Screenshots are located in `docs/screenshots/` directory.*
 
 ## Architecture
 
@@ -392,25 +574,31 @@ The project includes a comprehensive GitHub Actions workflow:
 
 ## Docker Hub Repository
 
-**Docker Hub**: https://hub.docker.com/r/andylanchipa/calculation-app
+**Docker Hub**: `https://hub.docker.com/r/<your-username>/calculation-app`
 
 The application is automatically deployed to Docker Hub on every push to the main branch.
 
 ### Pull and Run
 ```bash
 # Pull the latest image
-docker pull andylanchipa/calculation-app:latest
+docker pull <your-username>/calculation-app:latest
 
 # Run the container
 docker run -p 8000:8000 \
   -e DATABASE_URL="postgresql://user:pass@host/db" \
   -e SECRET_KEY="your-secret-key" \
-  andylanchipa/calculation-app:latest
+  <your-username>/calculation-app:latest
+
+# Access the application
+# API: http://localhost:8000/docs
+# Front-end: http://localhost:8000/static/login.html
 ```
 
 ### Available Tags
 - `latest`: Most recent build from main branch
 - `<commit-sha>`: Specific commit version for reproducibility
+
+**Note**: Replace `<your-username>` with your actual Docker Hub username. Configure `DOCKER_USERNAME` and `DOCKER_TOKEN` secrets in your GitHub repository settings for automated deployment.
 
 ## Development Guidelines
 
