@@ -172,6 +172,12 @@ The application includes a complete authentication interface:
    docker-compose up -d
    ```
 
+3. **Docker Hub Repository**
+  The CI pipeline pushes images to Docker Hub:
+  - Repo: https://hub.docker.com/r/andylanchipa/calculation-app
+  - Tags: `latest` and the commit SHA
+
+
 ## API Documentation
 
 Once the application is running, visit:
